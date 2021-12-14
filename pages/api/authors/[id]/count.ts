@@ -18,8 +18,8 @@ export default function handler(
 ) {
     const { id } = req.query
 
-    if(+id === NaN) 
-        res.status(400).json({ message: 'Invalid Author id'})
+    if(isNaN(+id)) 
+        return res.status(400).json({ message: 'Invalid Author id'})
 
     const count = books.filter((book: Book) => book.author_id === +id).length
     
