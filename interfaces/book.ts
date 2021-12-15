@@ -4,3 +4,8 @@ export interface Book {
     title: string,
     year: number
 }
+
+
+export interface BookWithAuthor extends Book {
+    author: string
+}
