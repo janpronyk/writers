@@ -1,6 +1,5 @@
-import { Table } from "antd";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { Col, Input, Row, Table } from "antd";
 import { Author } from "../interfaces/author";
 
 const columns = [
@@ -12,7 +11,7 @@ const columns = [
     {
         title: 'Full Name',
         dataIndex: 'full_name',
-        render: (text: string, record: Author, index: number) => 
+        render: (text: string, record: Author, index: number) =>
             `${record.first_name} ${record.last_name}`,
         key: 'full_name'
     },
@@ -30,13 +29,28 @@ const columns = [
 
 interface AuthorsProps {
     authors: Author[]
+    onSearch: (query: string) => void
 }
 
-export const Authors: React.FC<AuthorsProps> = ({ authors }) => {
+const { Search } = Input
+
+export const Authors: React.FC<AuthorsProps> = (
+    { authors, onSearch }) => {
 
     return (
         <>
-            <h2>Authors</h2>
+            <Row>
+                <Col span={12}>
+                    <h2>Authors</h2>
+                </Col>
+
+                <Col span={12}>
+                    <Search 
+                        placeholder="Search authors..."
+                        onChange={e => onSearch(e.target.value)} 
+                        allowClear />
+                </Col>
+            </Row>
             <Table dataSource={authors} columns={columns} rowKey={"id"} />
         </>
     )

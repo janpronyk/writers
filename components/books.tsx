@@ -1,5 +1,5 @@
 import React from "react";
-import { Table } from "antd";
+import { Col, Input, Row, Table } from "antd";
 import { Book } from "../interfaces/book";
 import axios from "axios";
 import { Author } from "../interfaces/author";
@@ -29,14 +29,28 @@ const columns = [
 
 
 interface BooksProps {
-    books: Book[]
+    books: Book[],
+    onSearch: (query: string) => void
 }
 
-export const Books: React.FC<BooksProps> = ({ books }) => {
+const { Search } = Input
+
+export const Books: React.FC<BooksProps> = ({ books, onSearch }) => {
 
     return (
         <>
-            <h2>Books</h2>
+            <Row>
+                <Col span={12}>
+                    <h2>Authors</h2>
+                </Col>
+
+                <Col span={12}>
+                    <Search
+                        placeholder="Search authors..."
+                        onChange={e => onSearch(e.target.value)}
+                        allowClear />
+                </Col>
+            </Row>
             <Table dataSource={books} columns={columns} rowKey={"id"} />
         </>
     )

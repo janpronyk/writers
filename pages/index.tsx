@@ -17,27 +17,67 @@ const Home: NextPage = () => {
   const [filteredBooks, setFilteredBooks] = useState<BookWithAuthor[]>([])
   const [filteredAuthors, setFilteredAuthors] = useState<AuthorWithBooksCount[]>([])
 
-  const [ nationalityFilter, setNationalityFilter] = useState('all')
+  const [nationalityFilter, setNationalityFilter] = useState('all')
+
+  const [authorSearch, setAuthorSearch] = useState('')
+  const [booksSearch, setBooksSearch] = useState('')
 
 
   useEffect(() => {
-    if(nationalityFilter === 'all') {
+    if (nationalityFilter === 'all') {
       setFilteredAuthors([...authors])
       setFilteredBooks([...books])
     } else {
-      const authorsByNationality = authors.filter(author => author.nationality.toLocaleLowerCase() === nationalityFilter.toLocaleLowerCase())
+      const authorsByNationality = authors.filter(author =>
+        author.nationality.toLocaleLowerCase() === nationalityFilter.toLocaleLowerCase())
       setFilteredAuthors(authorsByNationality)
 
-      const booksFiltered = books.filter(book => 
+      const booksFiltered = books.filter(book =>
         authorsByNationality.some(author => author.id === book.author_id))
       setFilteredBooks(booksFiltered)
     }
   }, [nationalityFilter])
 
+
+  useEffect(() => {
+    const query = authorSearch.toLocaleLowerCase()
+    if (authorSearch) {
+      const filtered = authors.filter(author =>
+        author.id.toString().includes(query) ||
+        author.booksCount.toString().includes(query) ||
+        author.first_name.toLocaleLowerCase().includes(query) ||
+        author.last_name.toLocaleLowerCase().includes(query) ||
+        author.nationality.toLocaleLowerCase().includes(query)
+      )
+      setFilteredAuthors(filtered)
+    } else {
+      setFilteredAuthors([...authors])
+    }
+  }, [authorSearch])
+
+
+  useEffect(() => {
+    const query = booksSearch.toLocaleLowerCase()
+    if (booksSearch) {
+      const filtered = books.filter(book =>
+        book.id.toString().includes(query) ||
+        book.title.toLocaleLowerCase().includes(query) ||
+        book.author.toLocaleLowerCase().includes(query)
+      )
+      setFilteredBooks(filtered)
+    } else {
+      setFilteredBooks([...books])
+    }
+  }, [booksSearch])
+
+
   useEffect(() => {
     if (!authors.length) {
       axios.get<AuthorWithBooksCount[]>('/api/authors')
-        .then(({ data }) => setAuthors(data))
+        .then(({ data }) => {
+          setAuthors(data)
+          setFilteredAuthors(data)
+        })
         .catch(err => console.log('Error fetching authors', err))
     }
   }, [authors])
@@ -56,6 +96,7 @@ const Home: NextPage = () => {
           }]
         }
         setBooks(withAuthors)
+        setFilteredBooks(withAuthors)
 
       } catch (error) {
         console.error('Error fetching books data')
@@ -88,13 +129,17 @@ const Home: NextPage = () => {
 
           <Col xs={24} md={24}>
 
-            <Authors authors={filteredAuthors} />
+            <Authors
+              onSearch={setAuthorSearch}
+              authors={filteredAuthors} />
 
           </Col>
 
           <Col xs={24} md={24}>
 
-            <Books books={filteredBooks} />
+            <Books
+              onSearch={setBooksSearch}
+              books={filteredBooks} />
 
           </Col>
 
