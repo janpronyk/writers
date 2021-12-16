@@ -1,8 +1,6 @@
 import React from "react";
 import { Col, Input, Row, Table } from "antd";
 import { Book } from "../interfaces/book";
-import axios from "axios";
-import { Author } from "../interfaces/author";
 
 const columns = [
     {
