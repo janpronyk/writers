@@ -41,7 +41,7 @@ export const Books: React.FC<BooksProps> = ({ books, onSearch }) => {
         <>
             <Row>
                 <Col span={12}>
-                    <h2>Authors</h2>
+                    <h2>Books</h2>
                 </Col>
 
                 <Col span={12}>
