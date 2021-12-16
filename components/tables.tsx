@@ -38,6 +38,13 @@ export const Tables: React.FC = () => {
 
 
     useEffect(() => {
+        if(booksSearch || authorSearch ) {
+            setSelectedAuthor(null)
+        }
+    }, [authorSearch, booksSearch])
+
+
+    useEffect(() => {
         if (nationalityFilter === 'all') {
             setFilteredAuthors([...authors])
             setFilteredBooks([...books])
