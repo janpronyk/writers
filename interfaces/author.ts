@@ -4,7 +4,3 @@ export interface Author {
     last_name: string,
     nationality: string
 }
-
-export interface AuthorWithBooksCount extends Author {
-    booksCount: number
-}
