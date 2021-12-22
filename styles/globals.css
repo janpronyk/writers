@@ -14,3 +14,11 @@ a {
 * {
   box-sizing: border-box;
 }
+
+
+.error {
+  padding: 10px;
+  color: red;
+  margin: 20px auto;
+  background-color: rgb(248, 164, 164);
+}

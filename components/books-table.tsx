@@ -15,7 +15,7 @@ const { Search } = Input;
 
 export const Books: React.FC<BooksProps> = React.memo(
   ({ books, booksSearch, onSearch }) => {
-    const { authors } = useApp();
+    const { authors, booksPending, booksError } = useApp();
 
     const columns = [
       {
@@ -62,7 +62,19 @@ export const Books: React.FC<BooksProps> = React.memo(
             />
           </Col>
         </Row>
-        <Table dataSource={books} columns={columns} rowKey={"id"} />
+
+        {booksError && (
+          <div className="error">
+            Sorry there where an error while loading books data.
+          </div>
+        )}
+        
+        <Table
+          loading={booksPending}
+          dataSource={books}
+          columns={columns}
+          rowKey={"id"}
+        />
       </>
     );
   }

@@ -1,8 +1,9 @@
 import React, { ChangeEvent } from "react";
 import { Col, Input, Row, Table } from "antd";
+
 import { Author } from "../interfaces/author";
+
 import { useApp } from "../hooks/useApp";
-import { debounce } from "lodash";
 
 interface AuthorsProps {
   authors: Author[];
@@ -15,7 +16,7 @@ const { Search } = Input;
 
 export const Authors: React.FC<AuthorsProps> = React.memo(
   ({ authors, search, onSearch, onCountClicked }) => {
-    const { books } = useApp();
+    const { books, authorsPending, authorsError } = useApp();
 
     const columns = [
       {
@@ -74,7 +75,19 @@ export const Authors: React.FC<AuthorsProps> = React.memo(
             />
           </Col>
         </Row>
-        <Table dataSource={authors} columns={columns} rowKey={"id"} />
+
+        {authorsError && (
+          <div className="error">
+            Sorry there where an error while loading authors data.
+          </div>
+        )}
+
+        <Table
+          dataSource={authors}
+          columns={columns}
+          loading={authorsPending}
+          rowKey={"id"}
+        />
       </>
     );
   }
