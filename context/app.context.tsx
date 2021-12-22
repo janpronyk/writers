@@ -6,10 +6,10 @@ import { Book } from "../interfaces/book";
 export interface IAppContext {
   books: Book[];
   authors: Author[];
-  authorsPending: boolean
-  authorsError: string | null
-  booksPending: boolean
-  booksError: string | null
+  authorsPending: boolean;
+  authorsError: string | null;
+  booksPending: boolean;
+  booksError: string | null;
 }
 
 const innitialState = {
@@ -18,8 +18,10 @@ const innitialState = {
   authorsPending: false,
   authorsError: null,
   booksPending: false,
-  booksError: null
+  booksError: null,
 };
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api"
 
 export const AppContext = createContext<IAppContext>(innitialState);
 
@@ -31,13 +33,13 @@ export const AppProvider: React.FC = ({ children }) => {
     data: booksData,
     isPending: booksPending,
     error: booksError,
-  } = useFetch("/api/books");
+  } = useFetch(`${API_URL}/books`);
 
   const {
     data: authorsData,
     isPending: authorsPending,
     error: authorsError,
-  } = useFetch("/api/authors");
+  } = useFetch(`${API_URL}/authors`);
 
   useEffect(() => {
     setBooks(booksData);
