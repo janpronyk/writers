@@ -9,36 +9,6 @@ import { Book } from "../interfaces/book";
 
 import { useApp } from "../hooks/useApp";
 
-const filterAuthors = (authors: Author[], books: Book[], query: string) => {
-  query.trim().toLocaleLowerCase();
-  return authors.filter((author) => {
-    const booksCount = books.filter(
-      (book) => book.author_id === author.id
-    ).length;
-    return (
-      author.id.toString().includes(query) ||
-      booksCount.toString().includes(query) ||
-      author.first_name.toLocaleLowerCase().includes(query) ||
-      author.last_name.toLocaleLowerCase().includes(query) ||
-      author.nationality.toLocaleLowerCase().includes(query)
-    );
-  });
-};
-
-const filterBooks = (books: Book[], authors: Author[], query: string) => {
-  query.trim().toLocaleLowerCase();
-  return books.filter((book) => {
-    const author = authors.find((author) => author.id === book.author_id);
-    const authorName = `${author?.first_name} ${author?.last_name}`;
-    return (
-      book.id.toString().toLocaleLowerCase().includes(query) ||
-      book.title.toLocaleLowerCase().includes(query) ||
-      book.year.toString().toLocaleLowerCase().includes(query) ||
-      authorName.toLocaleLowerCase().includes(query)
-    );
-  });
-};
-
 export const Tables: React.FC = () => {
   const { books, authors } = useApp();
 
@@ -92,11 +62,19 @@ export const Tables: React.FC = () => {
 
   useEffect(() => {
     if (authorSearch.trim()) {
-      const filtered = filterAuthors(
-        filteredAuthorsByNationality,
-        books,
-        authorSearch
-      );
+      const query = authorSearch.trim().toLocaleLowerCase();
+      const filtered = filteredAuthorsByNationality.filter((author) => {
+        const booksCount = books.filter(
+          (book) => book.author_id === author.id
+        ).length;
+        return (
+          author.id.toString().includes(query) ||
+          booksCount.toString().includes(query) ||
+          author.first_name.toLocaleLowerCase().includes(query) ||
+          author.last_name.toLocaleLowerCase().includes(query) ||
+          author.nationality.toLocaleLowerCase().includes(query)
+        );
+      });
       setFilteredAuthors(filtered);
     } else {
       setFilteredAuthors(filteredAuthorsByNationality);
@@ -104,11 +82,17 @@ export const Tables: React.FC = () => {
   }, [authorSearch, filteredAuthorsByNationality]);
 
   useEffect(() => {
-    const filtered = filterBooks(
-      filteredBooksByNationality,
-      authors,
-      booksSearch
-    );
+    const query = booksSearch.trim().toLocaleLowerCase();
+    const filtered = filteredBooksByNationality.filter((book) => {
+      const author = authors.find((author) => author.id === book.author_id);
+      const authorName = `${author?.first_name} ${author?.last_name}`;
+      return (
+        book.id.toString().toLocaleLowerCase().includes(query) ||
+        book.title.toLocaleLowerCase().includes(query) ||
+        book.year.toString().toLocaleLowerCase().includes(query) ||
+        authorName.toLocaleLowerCase().includes(query)
+      );
+    });
     setFilteredBooks(filtered);
   }, [booksSearch]);
 
