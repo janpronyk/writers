@@ -1,12 +1,12 @@
-import React, { useCallback } from "react";
+import React, { ChangeEvent } from "react";
 import { Col, Input, Row, Table } from "antd";
 import { Author } from "../interfaces/author";
-import { debounce } from "lodash";
 import { useApp } from "../hooks/useApp";
+import { debounce } from "lodash";
 
 interface AuthorsProps {
   authors: Author[];
-  authorsSearch: string;
+  search: string;
   onSearch: (query: string) => void;
   onCountClicked: (authorName: string) => void;
 }
@@ -14,7 +14,7 @@ interface AuthorsProps {
 const { Search } = Input;
 
 export const Authors: React.FC<AuthorsProps> = React.memo(
-  ({ authors, authorsSearch, onSearch, onCountClicked }) => {
+  ({ authors, search, onSearch, onCountClicked }) => {
     const { books } = useApp();
 
     const columns = [
@@ -56,8 +56,6 @@ export const Authors: React.FC<AuthorsProps> = React.memo(
       },
     ];
 
-    console.log("Authors Table rerendered");
-
     return (
       <>
         <Row>
@@ -67,9 +65,11 @@ export const Authors: React.FC<AuthorsProps> = React.memo(
 
           <Col span={12}>
             <Search
-              value={authorsSearch}
               placeholder="Search authors..."
-              onChange={(e) => onSearch(e.target.value)}
+              value={search}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                onSearch(e.target.value)
+              }
               allowClear
             />
           </Col>

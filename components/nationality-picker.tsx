@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Select } from "antd";
+
 import { useApp } from "../hooks/useApp";
 
 const { Option } = Select;
@@ -27,19 +28,22 @@ export const NationalityPicker: React.FC<NationalityPickerProps> = ({
 
   return (
     <>
-      <Select
-        defaultValue="all"
-        value={value}
-        onChange={onSelect}
-        style={{ width: 160 }}
-      >
-        <Option value="all">All Nationalities</Option>
-        {nationalities.map((item) => (
-          <Option key={item} value={item}>
-            {item}
-          </Option>
-        ))}
-      </Select>
+      <label>
+        <span style={{ marginRight: "20px" }}>Filter by nationality:</span>
+        <Select
+          defaultValue="all"
+          value={value}
+          onChange={onSelect}
+          style={{ width: 160 }}
+        >
+          <Option value="all">All Nationalities</Option>
+          {nationalities.map((item) => (
+            <Option key={item} value={item}>
+              {item}
+            </Option>
+          ))}
+        </Select>
+      </label>
     </>
   );
 };

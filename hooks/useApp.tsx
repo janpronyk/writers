@@ -5,7 +5,7 @@ export const useApp = () => {
   const context = useContext(AppContext);
 
   if (context === undefined)
-    throw new Error("useApp() must be used inside AppProvider");
+    throw new Error("useApp must be used inside AppProvider");
 
   return context;
 };

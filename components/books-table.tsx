@@ -1,6 +1,8 @@
 import * as React from "react";
 import { Col, Input, Row, Table } from "antd";
+
 import { Book } from "../interfaces/book";
+
 import { useApp } from "../hooks/useApp";
 
 interface BooksProps {
@@ -43,8 +45,6 @@ export const Books: React.FC<BooksProps> = React.memo(
         key: "year",
       },
     ];
-
-    console.log("Books Table rerendered");
 
     return (
       <>

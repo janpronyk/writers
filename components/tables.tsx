@@ -1,18 +1,43 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { Col, Row } from "antd";
-import { Books } from "./books-table";
-import { Authors } from "./authors-table";
+import React, { useCallback, useEffect, useState } from "react";
 import { NationalityPicker } from "../components/nationality-picker";
+import { Authors } from "./authors-table";
+import { Books } from "./books-table";
+import { Col, Row } from "antd";
 
 import { Author } from "../interfaces/author";
 import { Book } from "../interfaces/book";
+
 import { useApp } from "../hooks/useApp";
+
+const filterAuthors = (authors: Author[], books: Book[], query: string) => {
+  query.trim().toLocaleLowerCase();
+  return authors.filter((author) => {
+    const booksCount = books.filter(
+      (book) => book.author_id === author.id
+    ).length;
+    return (
+      author.id.toString().includes(query) ||
+      booksCount.toString().includes(query) ||
+      author.first_name.toLocaleLowerCase().includes(query) ||
+      author.last_name.toLocaleLowerCase().includes(query) ||
+      author.nationality.toLocaleLowerCase().includes(query)
+    );
+  });
+};
+
+const filterBooks = (books: Book[], authors: Author[], query: string) => {
+  query.trim().toLocaleLowerCase();
+  return books.filter((book) => {
+    const author = authors.find((author) => author.id === book.author_id);
+    const authorName = `${author?.first_name} ${author?.last_name}`;
+    return (
+      book.id.toString().toLocaleLowerCase().includes(query) ||
+      book.title.toLocaleLowerCase().includes(query) ||
+      book.year.toString().toLocaleLowerCase().includes(query) ||
+      authorName.toLocaleLowerCase().includes(query)
+    );
+  });
+};
 
 export const Tables: React.FC = () => {
   const { books, authors } = useApp();
@@ -39,12 +64,14 @@ export const Tables: React.FC = () => {
   useEffect(() => {
     setFilteredAuthors([...authors]);
     setFilteredAuthorsByNationality([...authors]);
+    setFilteredBooksByNationality([...books]);
     setFilteredBooks([...books]);
   }, [books, authors]);
 
   useEffect(() => {
     let filteredAuthors: Author[] = [];
     let filteredBooks: Book[] = [];
+
     if (nationalityFilter === "all") {
       filteredAuthors = [...authors];
       filteredBooks = [...books];
@@ -65,19 +92,11 @@ export const Tables: React.FC = () => {
 
   useEffect(() => {
     if (authorSearch.trim()) {
-      const query = authorSearch.trim().toLocaleLowerCase();
-      const filtered = filteredAuthorsByNationality.filter((author) => {
-        const booksCount = books.filter(
-          (book) => book.author_id === author.id
-        ).length;
-        return (
-          author.id.toString().includes(query) ||
-          booksCount.toString().includes(query) ||
-          author.first_name.toLocaleLowerCase().includes(query) ||
-          author.last_name.toLocaleLowerCase().includes(query) ||
-          author.nationality.toLocaleLowerCase().includes(query)
-        );
-      });
+      const filtered = filterAuthors(
+        filteredAuthorsByNationality,
+        books,
+        authorSearch
+      );
       setFilteredAuthors(filtered);
     } else {
       setFilteredAuthors(filteredAuthorsByNationality);
@@ -85,19 +104,11 @@ export const Tables: React.FC = () => {
   }, [authorSearch, filteredAuthorsByNationality]);
 
   useEffect(() => {
-    const query = booksSearch.trim().toLocaleLowerCase();
-
-    const filtered = filteredBooksByNationality.filter((book) => {
-      const author = authors.find((author) => author.id === book.author_id);
-      const authorName = `${author?.first_name} ${author?.last_name}`;
-      return (
-        book.id.toString().toLocaleLowerCase().includes(query) ||
-        book.title.toLocaleLowerCase().includes(query) ||
-        book.year.toString().toLocaleLowerCase().includes(query) ||
-        authorName.toLocaleLowerCase().includes(query)
-      );
-    });
-
+    const filtered = filterBooks(
+      filteredBooksByNationality,
+      authors,
+      booksSearch
+    );
     setFilteredBooks(filtered);
   }, [booksSearch]);
 
@@ -112,18 +123,18 @@ export const Tables: React.FC = () => {
 
       <Col xs={24}>
         <Authors
-          onCountClicked={handleCountClick}
-          authorsSearch={authorSearch}
-          onSearch={setAuthorSearch}
+          search={authorSearch}
           authors={filteredAuthors}
+          onCountClicked={handleCountClick}
+          onSearch={setAuthorSearch}
         />
       </Col>
 
       <Col xs={24}>
         <Books
           booksSearch={booksSearch}
-          onSearch={setBooksSearch}
           books={filteredBooks}
+          onSearch={setBooksSearch}
         />
       </Col>
     </Row>
