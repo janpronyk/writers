@@ -33,7 +33,7 @@ export const Tables: React.FC = () => {
     setBooksSearch(authorName);
     setNationalityFilter("all");
     booksSearchInput.current!.value = authorName;
-    authorsSearchInput.current!.value = ""
+    authorsSearchInput.current!.value = "";
   }, []);
 
   useEffect(() => {

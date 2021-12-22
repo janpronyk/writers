@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Col, Input, Row, Table } from "antd";
+import { Col, Row, Table } from "antd";
 
 import { Book } from "../interfaces/book";
 
@@ -15,7 +15,6 @@ interface BooksProps {
 export const Books: React.FC<BooksProps> = React.memo(
   ({ books, forwardedRef, onSearch }) => {
     const { authors, booksPending, booksError } = useApp();
-
 
     const columns = [
       {
@@ -62,7 +61,7 @@ export const Books: React.FC<BooksProps> = React.memo(
 
           <Col span={12}>
             <input
-              style={{ width: '100%' }}
+              style={{ width: "100%" }}
               ref={forwardedRef}
               placeholder="Search authors..."
               onChange={debounceSearch}

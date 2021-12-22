@@ -13,7 +13,6 @@ interface AuthorsProps {
   onCountClicked: (authorName: string) => void;
 }
 
-
 export const Authors: React.FC<AuthorsProps> = React.memo(
   ({ authors, forwardedRef, onSearch, onCountClicked }) => {
     const { books, authorsPending, authorsError } = useApp();
