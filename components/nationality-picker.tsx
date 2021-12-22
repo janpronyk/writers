@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Select } from "antd";
-import axios from "axios";
 import { useApp } from "../hooks/useApp";
 
 const { Option } = Select;

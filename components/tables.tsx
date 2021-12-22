@@ -14,30 +14,54 @@ import { Author } from "../interfaces/author";
 import { Book } from "../interfaces/book";
 import { useApp } from "../hooks/useApp";
 
-import { debounce } from "lodash";
-
 export const Tables: React.FC = () => {
   const { books, authors } = useApp();
 
-  const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
+  const [nationalityFilter, setNationalityFilter] = useState("all");
   const [filteredAuthorsByNationality, setFilteredAuthorsByNationality] =
     useState<Author[]>([]);
+  const [filteredBooksByNationality, setFilteredBooksByNationality] = useState<
+    Book[]
+  >([]);
+
+  const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
   const [filteredAuthors, setFilteredAuthors] = useState<Author[]>([]);
-  const [nationalityFilter, setNationalityFilter] = useState("all");
 
   const [authorSearch, setAuthorSearch] = useState("");
   const [booksSearch, setBooksSearch] = useState("");
 
   const handleCountClick = useCallback((authorName: string) => {
     setAuthorSearch("");
-    setNationalityFilter("all")
+    setNationalityFilter("all");
     setBooksSearch(authorName);
   }, []);
 
   useEffect(() => {
     setFilteredAuthors([...authors]);
+    setFilteredAuthorsByNationality([...authors]);
     setFilteredBooks([...books]);
   }, [books, authors]);
+
+  useEffect(() => {
+    let filteredAuthors: Author[] = [];
+    let filteredBooks: Book[] = [];
+    if (nationalityFilter === "all") {
+      filteredAuthors = [...authors];
+      filteredBooks = [...books];
+    } else {
+      filteredAuthors = authors.filter(
+        (author) =>
+          author.nationality.toLocaleLowerCase() ===
+          nationalityFilter.toLocaleLowerCase()
+      );
+      filteredBooks = books.filter((book) =>
+        filteredAuthors.some((author) => author.id === book.author_id)
+      );
+    }
+    setFilteredBooksByNationality(filteredBooks);
+    setFilteredBooks(filteredBooks);
+    setFilteredAuthorsByNationality(filteredAuthors);
+  }, [nationalityFilter]);
 
   useEffect(() => {
     if (authorSearch.trim()) {
@@ -61,26 +85,9 @@ export const Tables: React.FC = () => {
   }, [authorSearch, filteredAuthorsByNationality]);
 
   useEffect(() => {
-    let filteredAuthors: Author[] = [];
-    let filteredBooks: Book[] = []
-    if (nationalityFilter === "all") {
-      filteredAuthors = [...authors];
-      filteredBooks = [...books]
-    } else {
-      filteredAuthors = authors.filter(
-        (author) =>
-          author.nationality.toLocaleLowerCase() ===
-          nationalityFilter.toLocaleLowerCase()
-      );
-      filteredBooks = books.filter(book => filteredAuthors.some(author => author.id === book.author_id))
-    }
-    setFilteredBooks(filteredBooks)
-    setFilteredAuthorsByNationality(filteredAuthors);
-  }, [nationalityFilter]);
-
-  useEffect(() => {
     const query = booksSearch.trim().toLocaleLowerCase();
-    const filtered = books.filter((book) => {
+
+    const filtered = filteredBooksByNationality.filter((book) => {
       const author = authors.find((author) => author.id === book.author_id);
       const authorName = `${author?.first_name} ${author?.last_name}`;
       return (
@@ -97,7 +104,10 @@ export const Tables: React.FC = () => {
   return (
     <Row gutter={[16, 16]}>
       <Col xs={24}>
-        <NationalityPicker value={nationalityFilter} onSelect={setNationalityFilter} />
+        <NationalityPicker
+          value={nationalityFilter}
+          onSelect={setNationalityFilter}
+        />
       </Col>
 
       <Col xs={24}>
