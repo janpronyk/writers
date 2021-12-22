@@ -1,21 +1,21 @@
-import React, { ChangeEvent } from "react";
-import { Col, Input, Row, Table } from "antd";
+import * as React from "react";
+import { Col, Row, Table } from "antd";
 
 import { Author } from "../interfaces/author";
 
 import { useApp } from "../hooks/useApp";
+import { debounce } from "lodash";
 
 interface AuthorsProps {
   authors: Author[];
-  search: string;
+  forwardedRef: any;
   onSearch: (query: string) => void;
   onCountClicked: (authorName: string) => void;
 }
 
-const { Search } = Input;
 
 export const Authors: React.FC<AuthorsProps> = React.memo(
-  ({ authors, search, onSearch, onCountClicked }) => {
+  ({ authors, forwardedRef, onSearch, onCountClicked }) => {
     const { books, authorsPending, authorsError } = useApp();
 
     const columns = [
@@ -57,6 +57,13 @@ export const Authors: React.FC<AuthorsProps> = React.memo(
       },
     ];
 
+    const debounceSearch = React.useCallback(
+      debounce(function (e: React.ChangeEvent<HTMLInputElement>) {
+        onSearch(e.target.value);
+      }, 500),
+      []
+    );
+
     return (
       <>
         <Row>
@@ -65,13 +72,11 @@ export const Authors: React.FC<AuthorsProps> = React.memo(
           </Col>
 
           <Col span={12}>
-            <Search
+            <input
+              style={{ width: "100%" }}
+              ref={forwardedRef}
               placeholder="Search authors..."
-              value={search}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                onSearch(e.target.value)
-              }
-              allowClear
+              onChange={debounceSearch}
             />
           </Col>
         </Row>

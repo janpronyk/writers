@@ -4,18 +4,18 @@ import { Col, Input, Row, Table } from "antd";
 import { Book } from "../interfaces/book";
 
 import { useApp } from "../hooks/useApp";
+import { debounce } from "lodash";
 
 interface BooksProps {
   books: Book[];
-  booksSearch: string;
+  forwardedRef: any;
   onSearch: (query: string) => void;
 }
 
-const { Search } = Input;
-
 export const Books: React.FC<BooksProps> = React.memo(
-  ({ books, booksSearch, onSearch }) => {
+  ({ books, forwardedRef, onSearch }) => {
     const { authors, booksPending, booksError } = useApp();
+
 
     const columns = [
       {
@@ -46,6 +46,13 @@ export const Books: React.FC<BooksProps> = React.memo(
       },
     ];
 
+    const debounceSearch = React.useCallback(
+      debounce(function (e: React.ChangeEvent<HTMLInputElement>) {
+        onSearch(e.target.value);
+      }, 500),
+      []
+    );
+
     return (
       <>
         <Row>
@@ -54,11 +61,11 @@ export const Books: React.FC<BooksProps> = React.memo(
           </Col>
 
           <Col span={12}>
-            <Search
-              value={booksSearch}
+            <input
+              style={{ width: '100%' }}
+              ref={forwardedRef}
               placeholder="Search authors..."
-              onChange={(e) => onSearch(e.target.value)}
-              allowClear
+              onChange={debounceSearch}
             />
           </Col>
         </Row>
@@ -68,7 +75,7 @@ export const Books: React.FC<BooksProps> = React.memo(
             Sorry there where an error while loading books data.
           </div>
         )}
-        
+
         <Table
           loading={booksPending}
           dataSource={books}

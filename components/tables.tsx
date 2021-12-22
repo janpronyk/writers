@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { NationalityPicker } from "../components/nationality-picker";
-import { Authors } from "./authors-table";
-import { Books } from "./books-table";
+import { Authors } from "./authors";
+import { Books } from "./books";
 import { Col, Row } from "antd";
 
 import { Author } from "../interfaces/author";
@@ -12,7 +12,7 @@ import { useApp } from "../hooks/useApp";
 export const Tables: React.FC = () => {
   const { books, authors } = useApp();
 
-  const [nationalityFilter, setNationalityFilter] = useState("all");
+  const [nationalityFilter, setNationalityFilter] = useState<string>("all");
   const [filteredAuthorsByNationality, setFilteredAuthorsByNationality] =
     useState<Author[]>([]);
   const [filteredBooksByNationality, setFilteredBooksByNationality] = useState<
@@ -22,13 +22,18 @@ export const Tables: React.FC = () => {
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
   const [filteredAuthors, setFilteredAuthors] = useState<Author[]>([]);
 
-  const [authorSearch, setAuthorSearch] = useState("");
-  const [booksSearch, setBooksSearch] = useState("");
+  const [authorSearch, setAuthorSearch] = useState<string>("");
+  const [booksSearch, setBooksSearch] = useState<string>("");
+
+  let booksSearchInput = useRef<HTMLInputElement>();
+  let authorsSearchInput = useRef<HTMLInputElement>();
 
   const handleCountClick = useCallback((authorName: string) => {
     setAuthorSearch("");
-    setNationalityFilter("all");
     setBooksSearch(authorName);
+    setNationalityFilter("all");
+    booksSearchInput.current!.value = authorName;
+    authorsSearchInput.current!.value = ""
   }, []);
 
   useEffect(() => {
@@ -107,7 +112,7 @@ export const Tables: React.FC = () => {
 
       <Col xs={24}>
         <Authors
-          search={authorSearch}
+          forwardedRef={authorsSearchInput}
           authors={filteredAuthors}
           onCountClicked={handleCountClick}
           onSearch={setAuthorSearch}
@@ -116,7 +121,7 @@ export const Tables: React.FC = () => {
 
       <Col xs={24}>
         <Books
-          booksSearch={booksSearch}
+          forwardedRef={booksSearchInput}
           books={filteredBooks}
           onSearch={setBooksSearch}
         />
