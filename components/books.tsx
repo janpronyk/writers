@@ -12,7 +12,7 @@ interface BooksProps {
   onSearch: (query: string) => void;
 }
 
-export const Books: React.FC<BooksProps> = React.memo(
+const Books: React.FC<BooksProps> = React.memo(
   ({ books, forwardedRef, onSearch }) => {
     const { authors, booksPending, booksError } = useApp();
 
@@ -46,7 +46,7 @@ export const Books: React.FC<BooksProps> = React.memo(
     ];
 
     const debounceSearch = React.useCallback(
-      debounce(function (e: React.ChangeEvent<HTMLInputElement>) {
+      debounce((e: React.ChangeEvent<HTMLInputElement>) => {
         onSearch(e.target.value);
       }, 500),
       []
@@ -85,3 +85,8 @@ export const Books: React.FC<BooksProps> = React.memo(
     );
   }
 );
+
+
+Books.displayName = "Books"
+
+export default Books

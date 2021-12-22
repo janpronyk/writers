@@ -13,7 +13,7 @@ interface AuthorsProps {
   onCountClicked: (authorName: string) => void;
 }
 
-export const Authors: React.FC<AuthorsProps> = React.memo(
+const Authors: React.FC<AuthorsProps> = React.memo(
   ({ authors, forwardedRef, onSearch, onCountClicked }) => {
     const { books, authorsPending, authorsError } = useApp();
 
@@ -57,7 +57,7 @@ export const Authors: React.FC<AuthorsProps> = React.memo(
     ];
 
     const debounceSearch = React.useCallback(
-      debounce(function (e: React.ChangeEvent<HTMLInputElement>) {
+      debounce((e: React.ChangeEvent<HTMLInputElement>) => {
         onSearch(e.target.value);
       }, 500),
       []
@@ -96,3 +96,7 @@ export const Authors: React.FC<AuthorsProps> = React.memo(
     );
   }
 );
+
+Authors.displayName = "Authors";
+
+export default Authors;

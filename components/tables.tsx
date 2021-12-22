@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { NationalityPicker } from "../components/nationality-picker";
-import { Authors } from "./authors";
-import { Books } from "./books";
+import Authors from "./authors";
+import Books from "./books";
 import { Col, Row } from "antd";
 
 import { Author } from "../interfaces/author";
@@ -63,7 +63,7 @@ export const Tables: React.FC = () => {
     setFilteredBooksByNationality(filteredBooks);
     setFilteredBooks(filteredBooks);
     setFilteredAuthorsByNationality(filteredAuthors);
-  }, [nationalityFilter]);
+  }, [nationalityFilter, authors, books]);
 
   useEffect(() => {
     if (authorSearch.trim()) {
@@ -84,7 +84,7 @@ export const Tables: React.FC = () => {
     } else {
       setFilteredAuthors(filteredAuthorsByNationality);
     }
-  }, [authorSearch, filteredAuthorsByNationality]);
+  }, [authorSearch, filteredAuthorsByNationality, books]);
 
   useEffect(() => {
     const query = booksSearch.trim().toLocaleLowerCase();
@@ -99,7 +99,7 @@ export const Tables: React.FC = () => {
       );
     });
     setFilteredBooks(filtered);
-  }, [booksSearch]);
+  }, [booksSearch, filteredBooksByNationality, authors]);
 
   return (
     <Row gutter={[16, 16]}>
