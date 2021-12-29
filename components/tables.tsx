@@ -11,7 +11,7 @@ const Books = dynamic(() => import('./books'))
 const NationalityPicker = dynamic(() => import('./nationality-picker'))
 
 
-export const Tables: React.FC = () => {
+const Tables: React.FC = () => {
   const { books, authors } = useApp();
 
   const [nationalityFilter, setNationalityFilter] = useState<string>("all");
@@ -131,3 +131,7 @@ export const Tables: React.FC = () => {
     </Row>
   );
 };
+
+Tables.displayName = "Tables";
+
+export default Tables;

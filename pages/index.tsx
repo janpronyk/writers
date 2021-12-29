@@ -1,8 +1,10 @@
 import Head from "next/head";
+import dynamic from "next/dynamic";
 import type { NextPage } from "next";
-import { Tables } from "../components/tables";
 
 import styles from "../styles/Home.module.css";
+
+const Tables = dynamic(() => import('../components/tables'))
 
 const Home: NextPage = () => {
  
