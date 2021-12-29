@@ -14,7 +14,7 @@ interface BooksProps {
 
 const Books: React.FC<BooksProps> = React.memo(
   ({ books, forwardedRef, onSearch }) => {
-    const { authors, booksPending, booksError } = useApp();
+    const { authors, booksPending, booksErrorMessage } = useApp();
 
     const columns = [
       {
@@ -69,11 +69,7 @@ const Books: React.FC<BooksProps> = React.memo(
           </Col>
         </Row>
 
-        {booksError && (
-          <div className="error">
-            Sorry there where an error while loading books data.
-          </div>
-        )}
+        {booksErrorMessage && <div className="error">{booksErrorMessage}</div>}
 
         <Table
           loading={booksPending}
@@ -86,7 +82,6 @@ const Books: React.FC<BooksProps> = React.memo(
   }
 );
 
+Books.displayName = "Books";
 
-Books.displayName = "Books"
-
-export default Books
+export default Books;

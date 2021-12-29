@@ -7,18 +7,18 @@ export interface IAppContext {
   books: Book[];
   authors: Author[];
   authorsPending: boolean;
-  authorsError: string | null;
   booksPending: boolean;
-  booksError: string | null;
+  authorsErrorMessage: string;
+  booksErrorMessage: string;
 }
 
 const innitialState = {
   books: [],
   authors: [],
   authorsPending: false,
-  authorsError: null,
   booksPending: false,
-  booksError: null,
+  authorsErrorMessage: '',
+  booksErrorMessage: '',
 };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api"
@@ -28,6 +28,8 @@ export const AppContext = createContext<IAppContext>(innitialState);
 export const AppProvider: React.FC = ({ children }) => {
   const [books, setBooks] = useState<Book[]>([]);
   const [authors, setAuthors] = useState<Author[]>([]);
+  const [ booksErrorMessage, setBooksErrorMessage ] = useState('')
+  const [ authorsErrorMessage, setAuthorsErrorMessage ] = useState('')
 
   const {
     data: booksData,
@@ -44,7 +46,19 @@ export const AppProvider: React.FC = ({ children }) => {
   useEffect(() => {
     setBooks(booksData);
     setAuthors(authorsData);
-  }, [booksData, authorsData]);
+  }, []);
+
+  useEffect(() => {
+    if(booksError) {
+      setBooksErrorMessage('Sorry there where a problem getting books data')
+    }
+  }, [booksError])
+
+  useEffect(() => {
+    if(authorsError) {
+      setAuthorsErrorMessage('Sorry there where a problem getting authors data')
+    }
+  }, [authorsError])
 
   return (
     <AppContext.Provider
@@ -52,9 +66,9 @@ export const AppProvider: React.FC = ({ children }) => {
         books,
         authors,
         authorsPending,
-        authorsError,
         booksPending,
-        booksError,
+        authorsErrorMessage,
+        booksErrorMessage
       }}
     >
       {children}

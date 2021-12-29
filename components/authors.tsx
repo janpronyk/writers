@@ -15,7 +15,7 @@ interface AuthorsProps {
 
 const Authors: React.FC<AuthorsProps> = React.memo(
   ({ authors, forwardedRef, onSearch, onCountClicked }) => {
-    const { books, authorsPending, authorsError } = useApp();
+    const { books, authorsPending, authorsErrorMessage } = useApp();
 
     const columns = [
       {
@@ -80,10 +80,8 @@ const Authors: React.FC<AuthorsProps> = React.memo(
           </Col>
         </Row>
 
-        {authorsError && (
-          <div className="error">
-            Sorry there where an error while loading authors data.
-          </div>
+        {authorsErrorMessage && (
+          <div className="error">{authorsErrorMessage}</div>
         )}
 
         <Table
