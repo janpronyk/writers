@@ -1,10 +1,9 @@
 import * as React from "react";
 import { Col, Row, Table } from "antd";
+import { debounce } from "lodash";
 
 import { Book } from "../interfaces/book";
-
 import { useApp } from "../hooks/useApp";
-import { debounce } from "lodash";
 
 interface BooksProps {
   books: Book[];

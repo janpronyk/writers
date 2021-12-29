@@ -10,7 +10,7 @@ interface NationalityPickerProps {
   onSelect: (selected: string) => void;
 }
 
-export const NationalityPicker: React.FC<NationalityPickerProps> = ({
+const NationalityPicker: React.FC<NationalityPickerProps> = ({
   onSelect,
   value,
 }) => {
@@ -34,11 +34,12 @@ export const NationalityPicker: React.FC<NationalityPickerProps> = ({
           defaultValue="all"
           value={value}
           onChange={onSelect}
+          aria-label="Filter by nationality"
           style={{ width: 160 }}
         >
-          <Option value="all">All Nationalities</Option>
+          <Option value="all" aria-label="all">All Nationalities</Option>
           {nationalities.map((item) => (
-            <Option key={item} value={item}>
+            <Option key={item} value={item} aria-label={item}>
               {item}
             </Option>
           ))}
@@ -47,3 +48,8 @@ export const NationalityPicker: React.FC<NationalityPickerProps> = ({
     </>
   );
 };
+
+
+NationalityPicker.displayName = "NationalityPicker";
+
+export default NationalityPicker;

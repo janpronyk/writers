@@ -12,6 +12,7 @@ const Home: NextPage = () => {
         <title>Writers</title>
         <meta name="description" content="Writers Demo App" />
         <link rel="icon" href="/favicon.ico" />
+        <html lang="en" />
       </Head>
 
       <main className={styles.main}>

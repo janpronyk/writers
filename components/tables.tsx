@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { NationalityPicker } from "../components/nationality-picker";
-import Authors from "./authors";
-import Books from "./books";
 import { Col, Row } from "antd";
 
 import { Author } from "../interfaces/author";
 import { Book } from "../interfaces/book";
-
 import { useApp } from "../hooks/useApp";
+
+import NationalityPicker from "./nationality-picker";
+import Authors from "./authors";
+import Books from "./books";
 
 export const Tables: React.FC = () => {
   const { books, authors } = useApp();

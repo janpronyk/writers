@@ -1,10 +1,9 @@
 import * as React from "react";
 import { Col, Row, Table } from "antd";
+import { debounce } from "lodash";
 
 import { Author } from "../interfaces/author";
-
 import { useApp } from "../hooks/useApp";
-import { debounce } from "lodash";
 
 interface AuthorsProps {
   authors: Author[];
