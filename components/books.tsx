@@ -30,10 +30,13 @@ const Books: React.FC<BooksProps> = React.memo(
         title: "Author",
         dataIndex: "author",
         render: (text: string, record: Book, index: number) => {
-          const author = authors.find(
-            (author) => author.id === record.author_id
-          );
-          return `${author?.first_name} ${author?.last_name}`;
+          if (authors) {
+            const author = authors.find(
+              (author) => author.id === record.author_id
+            );
+            return `${author?.first_name} ${author?.last_name}`;
+          }
+          return ''
         },
         key: "author",
       },

@@ -37,18 +37,20 @@ const NationalityPicker: React.FC<NationalityPickerProps> = ({
           aria-label="Filter by nationality"
           style={{ width: 160 }}
         >
-          <Option value="all" aria-label="all">All Nationalities</Option>
-          {nationalities.map((item) => (
-            <Option key={item} value={item} aria-label={item}>
-              {item}
-            </Option>
-          ))}
+          <Option value="all" aria-label="all">
+            All Nationalities
+          </Option>
+          {nationalities &&
+            nationalities.map((item) => (
+              <Option key={item} value={item} aria-label={item}>
+                {item}
+              </Option>
+            ))}
         </Select>
       </label>
     </>
   );
 };
-
 
 NationalityPicker.displayName = "NationalityPicker";
 

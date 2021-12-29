@@ -38,18 +38,21 @@ const Authors: React.FC<AuthorsProps> = React.memo(
         title: "Books Count",
         dataIndex: "booksCount",
         render: (text: string, record: Author, index: number) => {
-          const count = books.filter(
-            (book) => book.author_id === record.id
-          ).length;
-          return (
-            <a
-              onClick={() =>
-                onCountClicked(`${record.first_name} ${record.last_name}`)
-              }
-            >
-              {count}
-            </a>
-          );
+          if(books) {
+            const count = books.filter(
+              (book) => book.author_id === record.id
+            ).length;
+            return (
+              <a
+                onClick={() =>
+                  onCountClicked(`${record.first_name} ${record.last_name}`)
+                }
+              >
+                {count}
+              </a>
+            );
+          }
+          return 0
         },
         key: "booksCount",
       },
