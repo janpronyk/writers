@@ -1,13 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { Col, Row } from "antd";
 
 import { Author } from "../interfaces/author";
 import { Book } from "../interfaces/book";
 import { useApp } from "../hooks/useApp";
 
-import NationalityPicker from "./nationality-picker";
-import Authors from "./authors";
-import Books from "./books";
+const Authors = dynamic(() => import('./authors'))
+const Books = dynamic(() => import('./books'))
+const NationalityPicker = dynamic(() => import('./nationality-picker'))
+
 
 export const Tables: React.FC = () => {
   const { books, authors } = useApp();
