@@ -1,8 +1,8 @@
 import Head from "next/head";
-import dynamic from "next/dynamic";
 import type { NextPage } from "next";
 
 import styles from "../styles/Home.module.css";
+import dynamic from "next/dynamic";
 
 const Tables = dynamic(() => import('../components/tables'))
 
@@ -14,7 +14,6 @@ const Home: NextPage = () => {
         <title>Writers</title>
         <meta name="description" content="Writers Demo App" />
         <link rel="icon" href="/favicon.ico" />
-        <html lang="en" />
       </Head>
 
       <main className={styles.main}>
