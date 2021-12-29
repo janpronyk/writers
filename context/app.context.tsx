@@ -8,8 +8,8 @@ export interface IAppContext {
   authors: Author[];
   authorsPending: boolean;
   booksPending: boolean;
-  authorsErrorMessage: string;
-  booksErrorMessage: string;
+  authorsErrorMessage: string | null;
+  booksErrorMessage: string | null;
 }
 
 const innitialState = {
@@ -17,19 +17,23 @@ const innitialState = {
   authors: [],
   authorsPending: false,
   booksPending: false,
-  authorsErrorMessage: '',
-  booksErrorMessage: '',
+  authorsErrorMessage: null,
+  booksErrorMessage: null,
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api"
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 export const AppContext = createContext<IAppContext>(innitialState);
 
 export const AppProvider: React.FC = ({ children }) => {
   const [books, setBooks] = useState<Book[]>([]);
   const [authors, setAuthors] = useState<Author[]>([]);
-  const [ booksErrorMessage, setBooksErrorMessage ] = useState('')
-  const [ authorsErrorMessage, setAuthorsErrorMessage ] = useState('')
+  const [booksErrorMessage, setBooksErrorMessage] = useState<string | null>(
+    null
+  );
+  const [authorsErrorMessage, setAuthorsErrorMessage] = useState<string | null>(
+    null
+  );
 
   const {
     data: booksData,
@@ -44,21 +48,30 @@ export const AppProvider: React.FC = ({ children }) => {
   } = useFetch(`${API_URL}/authors`);
 
   useEffect(() => {
-    setBooks(booksData);
-    setAuthors(authorsData);
-  }, []);
+    if (booksData.length) {
+      setBooks(booksData);
+    }
+  }, [booksData]);
 
   useEffect(() => {
-    if(booksError) {
-      setBooksErrorMessage('Sorry there where a problem getting books data')
+    if (authorsData.length) {
+      setAuthors(authorsData);
     }
-  }, [booksError])
+  }, [authorsData]);
 
   useEffect(() => {
-    if(authorsError) {
-      setAuthorsErrorMessage('Sorry there where a problem getting authors data')
+    if (booksError) {
+      setBooksErrorMessage("Sorry there where a problem getting books data");
     }
-  }, [authorsError])
+  }, [booksError]);
+
+  useEffect(() => {
+    if (authorsError) {
+      setAuthorsErrorMessage(
+        "Sorry there where a problem getting authors data"
+      );
+    }
+  }, [authorsError]);
 
   return (
     <AppContext.Provider
@@ -68,7 +81,7 @@ export const AppProvider: React.FC = ({ children }) => {
         authorsPending,
         booksPending,
         authorsErrorMessage,
-        booksErrorMessage
+        booksErrorMessage,
       }}
     >
       {children}
